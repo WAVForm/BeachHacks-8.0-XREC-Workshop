@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctuov64txx4kt"]
+[gd_scene load_steps=8 format=3 uid="uid://ctuov64txx4kt"]
 
 [ext_resource type="Script" uid="uid://c4svtst123ye8" path="res://player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://boxppdlcbab5" path="res://scenes/right_controller1.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://bnni8aqc7axer" path="res://scenes/hitbox.gd" id="3_qhqgy"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_qhqgy"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dqkch"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dqkch"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qlg0r"]
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_3vyb7")
@@ -17,3 +27,28 @@ tracker = &"left_hand"
 [node name="RightController" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -0.5)
 tracker = &"right_hand"
+script = ExtResource("2_g2els")
+
+[node name="Gun" type="MeshInstance3D" parent="XROrigin3D/RightController"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.3, 0, 0, -0.2)
+mesh = SubResource("BoxMesh_qhqgy")
+
+[node name="RayCast3D" type="RayCast3D" parent="XROrigin3D/RightController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 200, 0, 0, -0.0839938)
+target_position = Vector3(0, 0, -5)
+
+[node name="Laser" type="MeshInstance3D" parent="XROrigin3D/RightController"]
+transform = Transform3D(0.02, 0, 0, 0, -8.74228e-07, -0.02, 0, 20, -8.74228e-10, 0, 0, -20.3168)
+mesh = SubResource("CylinderMesh_dqkch")
+skeleton = NodePath("../RayCast3D")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+
+[node name="Hitbox" type="Area3D" parent="CharacterBody3D"]
+script = ExtResource("3_qhqgy")
+
+[node name="SphereShape" type="CollisionShape3D" parent="CharacterBody3D/Hitbox"]
+shape = SubResource("CapsuleShape3D_dqkch")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_qlg0r")

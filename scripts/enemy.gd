@@ -19,6 +19,6 @@ func move_to_center(delta):
 	var dir = current_pos.direction_to(target) * speed * delta
 	move_and_collide(dir)
 
-func _on_hit(body:Node):
-	if body is RayCast3D:
+func on_hit(hitter:Node3D):
+	if hitter is RayCast3D:
 		queue_free()
