@@ -1,16 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://ctuov64txx4kt"]
+[gd_scene load_steps=7 format=3 uid="uid://ctuov64txx4kt"]
 
 [ext_resource type="Script" uid="uid://c4svtst123ye8" path="res://player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://boxppdlcbab5" path="res://scenes/right_controller1.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://bnni8aqc7axer" path="res://scenes/hitbox.gd" id="3_qhqgy"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qlg0r"]
+
 [sub_resource type="BoxMesh" id="BoxMesh_qhqgy"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_dqkch"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dqkch"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qlg0r"]
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_3vyb7")
@@ -19,6 +17,13 @@ script = ExtResource("1_3vyb7")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="CharacterBody3D" type="Area3D" parent="XROrigin3D/XRCamera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.7, 0)
+script = ExtResource("3_qhqgy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XROrigin3D/XRCamera3D/CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_qlg0r")
 
 [node name="LeftController" type="XRController3D" parent="XROrigin3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, -0.5)
@@ -42,13 +47,4 @@ transform = Transform3D(0.02, 0, 0, 0, -8.74228e-07, -0.02, 0, 20, -8.74228e-10,
 mesh = SubResource("CylinderMesh_dqkch")
 skeleton = NodePath("../RayCast3D")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-
-[node name="Hitbox" type="Area3D" parent="CharacterBody3D"]
-script = ExtResource("3_qhqgy")
-
-[node name="SphereShape" type="CollisionShape3D" parent="CharacterBody3D/Hitbox"]
-shape = SubResource("CapsuleShape3D_dqkch")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_qlg0r")
+[connection signal="body_entered" from="XROrigin3D/XRCamera3D/CharacterBody3D" to="XROrigin3D/XRCamera3D/CharacterBody3D" method="_on_body_entered"]
